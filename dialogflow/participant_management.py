@@ -111,13 +111,16 @@ def analyze_content_text(project_id, conversation_id, participant_id, text):
 # [END dialogflow_analyze_content_text]
 
 # [START dialogflow_analyze_content_audio_stream]
+import google.auth
+from google.cloud import dialogflow_v2beta1 as dialogflow
+
+
 def analyze_content_audio_stream(
-    project_id, conversation_id, participant_id, audio_file_path
+    conversation_id, participant_id, audio_file_path
 ):
     """Analyze audio content for END_USER
 
     Args:
-        project_id: The GCP project linked with the conversation profile.
         conversation_id: Id of the conversation.
         participant_id: Id of the participant.
         audio_file_path: audio file in wav/mp3 format contains utterances of END_USER."""
@@ -127,7 +130,8 @@ def analyze_content_audio_stream(
     # After completing all of your requests, call the "__exit__()" method to safely
     # clean up any remaining background resources. Alternatively, use the client as
     # a context manager.
-    client = dialogflow.ParticipantsClient()
+    credentials, project_id = google.auth.default()
+    client = dialogflow.ParticipantsClient(credentials=credentials)
 
     participant_path = client.participant_path(
         project_id, conversation_id, participant_id
